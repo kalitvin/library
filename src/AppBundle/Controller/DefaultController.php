@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +17,17 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Book');
+        $books = $repository->findBy([], ['readdate' => 'DESC']);
+
+        $response = $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'books' => $books,
         ]);
+
+        $response->setSharedMaxAge(86400);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+        return $response;
     }
 
     /**
@@ -49,7 +57,7 @@ class DefaultController extends Controller
             );
 
             // Update the 'cover' property to store the image file name instead of its contents
-            $book->setCover($imagefileName);
+            $book->setCover($imagepath.'/'.$imagefileName);
             //coverfile upload end
 
             //bookfile upload start
@@ -66,7 +74,7 @@ class DefaultController extends Controller
             );
 
             // Update the 'book' property to store the PDF file name instead of its contents
-            $book->setBookfile($fileName);
+            $book->setBookfile($bookpath.'/'.$fileName);
             //bookfile upload end
 
             $book = $form->getData();

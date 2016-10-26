@@ -18,8 +18,23 @@
                 {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('addbook') }}">Add Book</a>
                 {% endif %}
+
+                <h3>Books list</h3>
+                {% for book in books %}
+                    <ul>
+                        <li>
+                            <img src="uploads/images{{ book.cover }}">  &nbsp;
+                            {{ book.title }} &nbsp;
+                            {{ book.author }} &nbsp;
+                            {{ book.readdate|date("m/d/Y") }} &nbsp
+                            {% if (book.ispublic==1) %}
+                                <a href="uploads/books{{ book.bookfile }}">Download PDF</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                {% endfor %}
             </div>
-                </p>
+
             </div>
 
         </div>

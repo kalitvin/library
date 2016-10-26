@@ -26,7 +26,7 @@ class AddBook extends AbstractType
             ->add('bookfile', FileType::class)
             ->add('readdate', DateType::class, array(
                 'placeholder' => 'Select a value'))
-            ->add('ispublic', CheckboxType::class)
+            ->add('ispublic', CheckboxType::class, array('required' => false,))
             ->add('save', SubmitType::class)
             ->getForm()
         ;
