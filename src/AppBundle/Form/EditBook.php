@@ -15,15 +15,17 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 
-class AddBook extends AbstractType
+class EditBook extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('title', TextType::class)
             ->add('author', TextType::class)
-            ->add('cover', FileType::class, array('required' => false,))
-            ->add('bookfile', FileType::class)
+            ->add('cover', FileType::class, array('data_class' => null, 'required' => false,))
+            ->add('deletecover', CheckboxType::class, array('mapped' => false,'required' => false,))
+            ->add('bookfile', FileType::class, array('data_class' => null,'required' => false,))
+            ->add('deletebookfile', CheckboxType::class, array('mapped' => false,'required' => false,))
             ->add('readdate', DateType::class, array(
                 'placeholder' => 'Select a value'))
             ->add('ispublic', CheckboxType::class, array('required' => false,))

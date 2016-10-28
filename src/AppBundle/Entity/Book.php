@@ -29,7 +29,7 @@ class Book
     private $author;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @Assert\Image(
      *     maxSize = "5M",
      *     mimeTypes = {"image/jpeg", "image/png"},
@@ -39,7 +39,7 @@ class Book
     private $cover;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @Assert\File(
      *     maxSize = "5M",
      *     mimeTypes = {"application/pdf", "application/x-pdf"},

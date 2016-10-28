@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Book;
 use AppBundle\Form\AddBook;
+use AppBundle\Form\EditBook;
+use Symfony\Component\HttpFoundation\File\File;
+
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class DefaultController extends Controller
 {
@@ -21,7 +26,7 @@ class DefaultController extends Controller
         $books = $repository->findBy([], ['readdate' => 'DESC']);
 
         $response = $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir') . '/..') . DIRECTORY_SEPARATOR,
             'books' => $books,
         ]);
 
@@ -41,40 +46,40 @@ class DefaultController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() ) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             //coverfile upload start
             $imagefile = $book->getCover();
-            $imageoriginalname =$imagefile->getClientOriginalName();
+            $imageoriginalname = $imagefile->getClientOriginalName();
             // Generate a unique name for the file before saving it
-            $imagefileName = $imageoriginalname.md5(uniqid()).'.'.$imagefile->guessExtension();
+            $imagefileName = $imageoriginalname . md5(uniqid()) . '.' . $imagefile->guessExtension();
 
-            $imagepath='/'.substr($imageoriginalname, 0, 3);
+            $imagepath = '/' . substr($imageoriginalname, 0, 3);
             // Move the file to the directory where images are stored
             $imagefile->move(
-                $this->getParameter('images_directory').$imagepath,
+                $this->getParameter('images_directory') . $imagepath,
                 $imagefileName
             );
 
             // Update the 'cover' property to store the image file name instead of its contents
-            $book->setCover($imagepath.'/'.$imagefileName);
+            $book->setCover($imagepath . '/' . $imagefileName);
             //coverfile upload end
 
             //bookfile upload start
             $file = $book->getBookfile();
-            $bookoriginalname =$file->getClientOriginalName();
+            $bookoriginalname = $file->getClientOriginalName();
             // Generate a unique name for the file before saving it
-            $fileName = $bookoriginalname.md5(uniqid()).'.'.$file->guessExtension();
+            $fileName = $bookoriginalname . md5(uniqid()) . '.' . $file->guessExtension();
 
-            $bookpath='/'.substr($bookoriginalname, 0, 3);
+            $bookpath = '/' . substr($bookoriginalname, 0, 3);
             // Move the file to the directory where books are stored
             $file->move(
-                $this->getParameter('books_directory').$bookpath,
+                $this->getParameter('books_directory') . $bookpath,
                 $fileName
             );
 
             // Update the 'book' property to store the PDF file name instead of its contents
-            $book->setBookfile($bookpath.'/'.$fileName);
+            $book->setBookfile($bookpath . '/' . $fileName);
             //bookfile upload end
 
             $book = $form->getData();
@@ -102,4 +107,137 @@ class DefaultController extends Controller
             '<html><body>Book added</body></html>'
         );
     }
+
+    /**
+     * @Route("/editbook/{id}", name="editbook")
+     */
+    public function bookEditAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $book = $em->getRepository('AppBundle:Book')->find($id);
+
+        if (!$book) {
+            throw $this->createNotFoundException(
+                'No book found for id ' . $id
+            );
+        }
+
+        //save path to files
+        $tmpCover = $book->getCover();
+        $tmpBookFile = $book->getBookfile();
+
+        //transform string to File object
+        if (is_null($tmpCover) == false) {
+            $book->setCover(
+                new File($this->getParameter('images_directory') . $book->getCover())
+            );
+        }
+
+        if (is_null($tmpBookFile) == false) {
+            $book->setBookfile(
+                new File($this->getParameter('books_directory') . $book->getBookfile())
+            );
+        }
+
+
+            // Update the 'cover' property to store the image file name instead of its contents
+            $book->setCover($tmpCover);
+            // Update the 'book' property to store the PDF file name instead of its contents
+            $book->setBookfile($tmpBookFile);
+            $em->flush();
+
+
+        $form = $this->createForm(EditBook::class, $book);
+        $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $book->setCover($tmpCover);
+                $book->setBookfile($tmpBookFile);
+                $em->flush();
+                $book = $form->getData();
+
+                if ($form->get('deletecover')->getData() == 1) {
+                    $fs = new Filesystem();
+                    try {
+                        $fs->remove($this->getParameter('images_directory') . $book->getCover());
+                    } catch (IOExceptionInterface $e) {
+                        echo "An error occurred while delete file" . $e->getPath();
+                    }
+                    $book->setCover(null);
+                    $em->flush();
+                    return new Response(
+                        '<html><body>Cover deleted</body></html>'
+                    );
+                } else {
+                    $imagefile = $form->get('cover')->getData();
+                    if ($imagefile<>null) {
+                        $imageoriginalname = $imagefile->getClientOriginalName();
+                        // Generate a unique name for the file before saving it
+                        $imagefileName = $imageoriginalname . md5(uniqid()) . '.' . $imagefile->guessExtension();
+
+                        $imagepath = '/' . substr($imageoriginalname, 0, 3);
+                        // Move the file to the directory where images are stored
+                        $imagefile->move(
+                            $this->getParameter('images_directory') . $imagepath,
+                            $imagefileName
+                        );
+
+                        // Update the 'cover' property to store the image file name instead of its contents
+                        $book->setCover($imagepath . '/' . $imagefileName);
+                    }
+                }
+
+                if ($form->get('deletebookfile')->getData() == 1) {
+                    $fs = new Filesystem();
+                    try {
+                        $fs->remove($this->getParameter('books_directory') . $book->getBookfile());
+                    } catch (IOExceptionInterface $e) {
+                        echo "An error occurred while delete file" . $e->getPath();
+                    }
+                    $book->setBookfile(null);
+                    $em->flush();
+                    return new Response(
+                        '<html><body>Book file deleted</body></html>'
+                    );
+                } else {
+                    $file = $form->get('bookfile')->getData();
+                    if ($file<>null) {
+                        $bookoriginalname = $file->getClientOriginalName();
+                        // Generate a unique name for the file before saving it
+                        $fileName = $bookoriginalname . md5(uniqid()) . '.' . $file->guessExtension();
+
+                        $bookpath = '/' . substr($bookoriginalname, 0, 3);
+                        // Move the file to the directory where books are stored
+                        $file->move(
+                            $this->getParameter('books_directory') . $bookpath,
+                            $fileName
+                        );
+
+                        // Update the 'book' property to store the PDF file name instead of its contents
+                        $book->setBookfile($bookpath . '/' . $fileName);
+                    }
+
+                }
+
+                $em->flush();
+                return $this->redirectToRoute('book_updated');
+            }
+
+            // render the template
+            return $this->render('default/editbook.html.twig', array(
+                'form' => $form->createView(),
+            ));
+
+    }
+
+    /**
+     * @Route("/book_updated", name="book_updated")
+     */
+    public function bookUpdatedAction()
+    {
+        return new Response(
+            '<html><body>Book updated</body></html>'
+        );
+    }
+
 }

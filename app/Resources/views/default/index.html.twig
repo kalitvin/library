@@ -26,9 +26,13 @@
                             <img src="uploads/images{{ book.cover }}">  &nbsp;
                             {{ book.title }} &nbsp;
                             {{ book.author }} &nbsp;
-                            {{ book.readdate|date("m/d/Y") }} &nbsp
+                            {{ book.readdate|date("m/d/Y") }} &nbsp;
                             {% if (book.ispublic==1) %}
                                 <a href="uploads/books{{ book.bookfile }}">Download PDF</a>
+                            {% endif %}
+                            &nbsp;
+                            {% if is_granted('ROLE_USER') %}
+                                <a href="{{ path('editbook', {'id': book.id}) }}">Edit Book</a>
                             {% endif %}
                         </li>
                     </ul>
