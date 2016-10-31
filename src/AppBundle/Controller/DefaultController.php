@@ -240,4 +240,27 @@ class DefaultController extends Controller
         );
     }
 
+    /**
+     * @Route("/delbook/{id}", name="deletebook")
+     */
+    public function bookDeletedAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $book = $em->getRepository('AppBundle:Book')->find($id);
+
+        if (!$book) {
+            throw $this->createNotFoundException(
+                'No book found for id ' . $id
+            );
+        }
+
+        // Save Entity
+        $em->remove($book);
+        $em->flush();
+
+        return new Response(
+            '<html><body>Book '.$id.' deleted</body></html>'
+        );
+    }
+
 }
