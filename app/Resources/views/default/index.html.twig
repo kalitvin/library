@@ -23,7 +23,7 @@
                 {% for book in books %}
                     <ul>
                         <li>
-                            <img src="uploads/images{{ book.cover }}">  &nbsp;
+                            {{ covertosize(book.cover, 100, 150)|raw }}
                             {{ book.title }} &nbsp;
                             {{ book.author }} &nbsp;
                             {{ book.readdate|date("m/d/Y") }} &nbsp;
