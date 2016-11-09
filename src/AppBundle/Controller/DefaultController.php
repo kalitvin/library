@@ -262,5 +262,4 @@ class DefaultController extends Controller
             '<html><body>Book '.$id.' deleted</body></html>'
         );
     }
-
 }
