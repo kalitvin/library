@@ -22,11 +22,10 @@ class AddBook extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('author', TextType::class)
-            ->add('cover', FileType::class, array('required' => false,))
+            ->add('cover', FileType::class, ['required' => false,])
             ->add('bookfile', FileType::class)
-            ->add('readdate', DateType::class, array(
-                'placeholder' => 'Select a value'))
-            ->add('ispublic', CheckboxType::class, array('required' => false,))
+            ->add('readdate', DateType::class, ['placeholder' => 'Select a value'])
+            ->add('ispublic', CheckboxType::class, ['required' => false,])
             ->add('save', SubmitType::class)
             ->getForm()
         ;

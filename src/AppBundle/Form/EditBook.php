@@ -22,13 +22,12 @@ class EditBook extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('author', TextType::class)
-            ->add('cover', FileType::class, array('data_class' => null, 'required' => false,))
-            ->add('deletecover', CheckboxType::class, array('mapped' => false,'required' => false,))
-            ->add('bookfile', FileType::class, array('data_class' => null,'required' => false,))
-            ->add('deletebookfile', CheckboxType::class, array('mapped' => false,'required' => false,))
-            ->add('readdate', DateType::class, array(
-                'placeholder' => 'Select a value'))
-            ->add('ispublic', CheckboxType::class, array('required' => false,))
+            ->add('cover', FileType::class, ['data_class' => null, 'required' => false,])
+            ->add('deletecover', CheckboxType::class, ['mapped' => false,'required' => false,])
+            ->add('bookfile', FileType::class, ['data_class' => null,'required' => false,])
+            ->add('deletebookfile', CheckboxType::class, ['mapped' => false,'required' => false,])
+            ->add('readdate', DateType::class, ['placeholder' => 'Select a value'])
+            ->add('ispublic', CheckboxType::class, ['required' => false,])
             ->add('save', SubmitType::class)
             ->getForm()
         ;

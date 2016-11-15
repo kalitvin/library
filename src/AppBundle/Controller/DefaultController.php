@@ -93,9 +93,9 @@ class DefaultController extends Controller
         }
 
         // render the template
-        return $this->render('default/addbook.html.twig', array(
+        return $this->render('default/addbook.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -224,9 +224,9 @@ class DefaultController extends Controller
             }
 
             // render the template
-            return $this->render('default/editbook.html.twig', array(
+            return $this->render('default/editbook.html.twig', [
                 'form' => $form->createView(),
-            ));
+            ]);
 
     }
 
