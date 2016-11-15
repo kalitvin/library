@@ -1,9 +1,9 @@
 <?php
+//Test PHP Git Hooks
 
 namespace AppBundle\Twig;
 
-class AppExtension extends \Twig_Extension
-{
+class AppExtension extends \Twig_Extension{
 
     public function getFunctions()
     {
@@ -12,7 +12,6 @@ class AppExtension extends \Twig_Extension
                 'is_safe' => ['html']
             ]),
         );
-
     }
 
     public function coverFunction($cover, $width, $height)
@@ -25,5 +24,4 @@ class AppExtension extends \Twig_Extension
     {
         return 'app_extension';
     }
-
 }
