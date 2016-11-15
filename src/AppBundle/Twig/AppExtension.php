@@ -8,8 +8,11 @@ class AppExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('covertosize', array($this, 'coverFunction')),
+            new \Twig_SimpleFunction('covertosize', [$this, 'coverFunction'], [
+                'is_safe' => ['html']
+            ]),
         );
+
     }
 
     public function coverFunction($cover, $width, $height)
@@ -22,4 +25,5 @@ class AppExtension extends \Twig_Extension
     {
         return 'app_extension';
     }
+
 }
