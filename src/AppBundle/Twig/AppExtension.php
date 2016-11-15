@@ -1,9 +1,10 @@
 <?php
-//Test PHP Git Hooks
+//Test PHP Git Hooks (2)
 
 namespace AppBundle\Twig;
 
-class AppExtension extends \Twig_Extension{
+class AppExtension extends \Twig_Extension
+{
 
     public function getFunctions()
     {
