@@ -17,7 +17,7 @@ class AppExtension extends \Twig_Extension
 
     public function coverFunction($cover, $width, $height)
     {
-        $img = "<img src=\"uploads/images".$cover."\""." width=\"".$width."\" height=\"".$height."\">";
+        $img=sprintf('<img src="uploads/images%s" width="%s" height="%s">', $cover, $width, $height);
         return $img;
     }
 
