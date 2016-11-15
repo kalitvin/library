@@ -11,7 +11,7 @@ services:
 #    Book subscriber
     book.subscriber:
         class: AppBundle\EventListener\BookSubscriber
-        arguments: ["@service_container"]
+        arguments: ["%books_directory%", "%images_directory%"]
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 

@@ -12,11 +12,13 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class BookSubscriber implements EventSubscriber
 {
-    protected $container;
+    protected $books_directory;
+    protected $images_directory;
 
-    public function __construct(Container $container)
+    public function __construct($books_directory, $images_directory)
     {
-        $this->container = $container;
+        $this->books_directory = $books_directory;
+        $this->images_directory = $images_directory;
     }
 
     public function getSubscribedEvents()
@@ -28,45 +30,21 @@ class BookSubscriber implements EventSubscriber
 
     public function postRemove(LifecycleEventArgs $args)
     {
-        //$this->index($args);
         $entity = $args->getEntity();
 
         // perhaps you only want to act on some "Book" entity
         if ($entity instanceof Book) {
-            //$entityManager = $args->getEntityManager();
-            // ... do something with the Book
-
-            //save path to files
-            $tmpCover = $entity->getCover();
-            $tmpBookFile = $entity->getBookfile();
-
             //delete cover image file
             $fs = new Filesystem();
-            try {
-                $fs->remove($this->container->getParameter('images_directory') . $entity->getCover());
-            } catch (IOExceptionInterface $e) {
-                echo "An error occurred while delete file" . $e->getPath();
+            if ($entity->getCover()<>null){
+                $fs->remove($this->images_directory . $entity->getCover());
             }
 
             //delete book pdf file
             $fs = new Filesystem();
-            try {
-                $fs->remove($this->container->getParameter('books_directory') . $entity->getBookfile());
-            } catch (IOExceptionInterface $e) {
-                echo "An error occurred while delete file" . $e->getPath();
+            if ($entity->getBookfile()<>null){
+                $fs->remove($this->books_directory . $entity->getBookfile());
             }
         }
     }
-
-    /*
-    public function index(LifecycleEventArgs $args)
-    {
-        $entity = $args->getEntity();
-        // perhaps you only want to act on some "Book" entity
-        if ($entity instanceof Book) {
-        //$entityManager = $args->getEntityManager();
-        // ... do something with the Book
-        }
-    }
-    */
 }
