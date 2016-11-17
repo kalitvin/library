@@ -5,7 +5,7 @@
  * Date: 24.10.16
  * Time: 10:34
  */
-
+//Test PHP Git Hooks
 namespace AppBundle\Entity;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;

@@ -1,5 +1,6 @@
 <?php
 // src/AppBundle/EventListener/BookSubscriber.php
+//Test PHP Git Hooks
 namespace AppBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
@@ -36,13 +37,13 @@ class BookSubscriber implements EventSubscriber
         if ($entity instanceof Book) {
             //delete cover image file
             $fs = new Filesystem();
-            if ($entity->getCover()<>null){
+            if ($entity->getCover()!=null) {
                 $fs->remove($this->images_directory . $entity->getCover());
             }
 
             //delete book pdf file
             $fs = new Filesystem();
-            if ($entity->getBookfile()<>null){
+            if ($entity->getBookfile()!=null) {
                 $fs->remove($this->books_directory . $entity->getBookfile());
             }
         }

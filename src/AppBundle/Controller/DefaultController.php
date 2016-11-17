@@ -1,5 +1,5 @@
 <?php
-
+//Test PHP Git Hooks
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
@@ -127,18 +127,17 @@ class DefaultController extends Controller
         $tmpBookFile = $book->getBookfile();
 
         //transform string to File object
-        if (is_null($tmpCover) == false) {
+        if ($tmpCover) {
             $book->setCover(
                 new File($this->getParameter('images_directory') . $book->getCover())
             );
         }
 
-        if (is_null($tmpBookFile) == false) {
+        if ($tmpBookFile) {
             $book->setBookfile(
                 new File($this->getParameter('books_directory') . $book->getBookfile())
             );
         }
-
 
             // Update the 'cover' property to store the image file name instead of its contents
             $book->setCover($tmpCover);
@@ -201,7 +200,7 @@ class DefaultController extends Controller
                     );
                 } else {
                     $file = $form->get('bookfile')->getData();
-                    if ($file<>null) {
+                    if ($file!=null) {
                         $bookoriginalname = $file->getClientOriginalName();
                         // Generate a unique name for the file before saving it
                         $fileName = $bookoriginalname . md5(uniqid()) . '.' . $file->guessExtension();

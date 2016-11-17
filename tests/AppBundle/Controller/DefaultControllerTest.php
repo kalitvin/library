@@ -1,5 +1,5 @@
 <?php
-
+//Test PHP Git Hooks
 namespace Tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

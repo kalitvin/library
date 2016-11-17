@@ -1,5 +1,5 @@
 <?php
-
+//Test PHP Git Hooks
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -33,8 +33,8 @@ class AddBook extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Book',
-        ));
+        $resolver->setDefaults([
+            'data_class' => Book::class,
+        ]);
     }
 }
