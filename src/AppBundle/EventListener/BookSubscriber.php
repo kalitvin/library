@@ -1,6 +1,5 @@
 <?php
 // src/AppBundle/EventListener/BookSubscriber.php
-//Test PHP Git Hooks
 namespace AppBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;

@@ -1,6 +1,4 @@
 <?php
-//Test PHP Git Hooks (2)
-
 namespace AppBundle\Twig;
 
 class AppExtension extends \Twig_Extension
