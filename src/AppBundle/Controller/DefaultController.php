@@ -12,6 +12,7 @@ use AppBundle\Form\EditBook;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class DefaultController extends Controller
 {
@@ -35,6 +36,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/addbook", name="addbook")
+     * @Security("has_role('ROLE_USER')")
      */
     public function newAction(Request $request)
     {
@@ -98,6 +100,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/editbook/{id}", name="editbook")
+     * @Security("has_role('ROLE_USER')")
      */
     public function bookEditAction(Request $request, $id)
     {
@@ -211,6 +214,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/delbook/{id}", name="deletebook")
+     * @Security("has_role('ROLE_USER')")
      */
     public function bookDeletedAction($id)
     {
@@ -232,3 +236,4 @@ class DefaultController extends Controller
         );
     }
 }
+
